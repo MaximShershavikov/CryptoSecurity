@@ -1,16 +1,16 @@
 /**********************************************************************************
 
-    CRYPTOSECURITY version 1.0. File Encryption Software
-    Copyright (C) 2018  Maxim Shershavikov
+    CRYPTOSECURITY version 1.1. File Encryption Software
+    Copyright (C) 2019  Maxim Shershavikov
 
-    This file is part of CryptoSecurity v1.0.
+    This file is part of CryptoSecurity v1.1.
 
-    CryptoSecurity v1.0 is free software: you can redistribute it and/or modify
+    CryptoSecurity v1.1 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CryptoSecurity v1.0 is distributed in the hope that it will be useful,
+    CryptoSecurity v1.1 is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -29,8 +29,8 @@
 
 #include <QObject>
 #include <QThread>
-#include <cstdio>
 #include <io.h>
+#include <Windows.h>
 #include "CryptoSecurity.h"
 #include "HashMd5.h"
 #include "ExpanseKey.h"
@@ -48,30 +48,27 @@ public slots:
     void RunDeCrypt();
 signals:
     void SendProgressCount(int);
-    void SendMessage(int mode);
+    void MessageProvade(int mode);
 private:
-    HASHMD5        *HashMd5;
-    CRYPTOSECURITY *CryptoSecurity;
-    EXPANSEKEY     *ExpanseKey;
-    ENCRYPT        *EnCrypt;
-    DECRYPT        *DeCrypt;
-    FILE           *CreateFile;
-    FILE           *OpenFile;
-    long long      *PtrSizeFile;
-    QByteArray     Str[3];
-    BYTE           CryptoKey[16];
-    BYTE           Data[16];
-    BYTE           HeadStart[16];
-    BYTE           HeadNext[16];
-    long double    count;
-    long double    sizecount;
-    long long      SizeFile;
-    long long      SzFl;
-    void _cykleByte(BYTE *PtrOwn, BYTE *PtrTwo, int i);
-    void _cykleByteZero(BYTE *Ptr, int i);
+    HASHMD5             *HashMd5;
+    CRYPTOSECURITY      *CryptoSecurity;
+    EXPANSEKEY          *ExpanseKey;
+    ENCRYPT             *EnCrypt;
+    DECRYPT             *DeCrypt;
+    FILE                *FileCreate;
+    FILE                *OpenFile;
+    MEMORYSTATUSEX      *Memory;
+    BYTE                *Buffer;
+    BYTE                *ptr;
+    QByteArray          Str[3];
+    long double         count[2];
+    long long           SizeFile[2];
+    char                HeadStart[16];
+    char                HeadNext[16];
+    unsigned long long  SizeFreeMemory;
+protected:
     void _nameOfFile(int i);
     void _searchNameOfFile(int n);
-    void _progressCount(FILE *OpenFile);
 };
 
 #endif // TREADENCRYPT_H

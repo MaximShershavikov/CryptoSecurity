@@ -1,16 +1,16 @@
 /**********************************************************************************
 
-    CRYPTOSECURITY version 1.0. File Encryption Software
-    Copyright (C) 2018  Maxim Shershavikov
+    CRYPTOSECURITY version 1.1. File Encryption Software
+    Copyright (C) 2019  Maxim Shershavikov
 
-    This file is part of CryptoSecurity v1.0.
+    This file is part of CryptoSecurity v1.1.
 
-    CryptoSecurity v1.0 is free software: you can redistribute it and/or modify
+    CryptoSecurity v1.1 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CryptoSecurity v1.0 is distributed in the hope that it will be useful,
+    CryptoSecurity v1.1 is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -82,7 +82,7 @@ void MainWindowCrypton::on_pushButton_clicked()
     ThreadEnCryp->moveToThread(Thread);
     connect(Thread, SIGNAL(started()), ThreadEnCryp, SLOT(RunEnCrypt()));
     connect(ThreadEnCryp, SIGNAL(SendProgressCount(int)), this, SLOT(ResiveProgressCount(int)), Qt::AutoConnection);
-    connect(ThreadEnCryp, SIGNAL(SendMessage(int)), this, SLOT(ResiveMessage(int)), Qt::AutoConnection);
+    connect(ThreadEnCryp, SIGNAL(MessageProvade(int)), this, SLOT(ResiveMessage(int)), Qt::AutoConnection);
     Thread->start();
 }
 
@@ -125,7 +125,7 @@ void MainWindowCrypton::on_pushButton_2_clicked()
     ThreadDeCryp->moveToThread(Thread);
     connect(Thread, SIGNAL(started()), ThreadDeCryp, SLOT(RunDeCrypt()));
     connect(ThreadDeCryp, SIGNAL(SendProgressCount(int)), this, SLOT(ResiveProgressCount(int)), Qt::AutoConnection);
-    connect(ThreadDeCryp, SIGNAL(SendMessage(int)), this, SLOT(ResiveMessage(int)), Qt::AutoConnection);
+    connect(ThreadDeCryp, SIGNAL(MessageProvade(int)), this, SLOT(ResiveMessage(int)), Qt::AutoConnection);
     Thread->start();
 }
 
@@ -180,6 +180,16 @@ void MainWindowCrypton::ResiveMessage(int mode)
         delete ThreadDeCryp;
         ThreadDeCryp = nullptr;
         break;
+    case 3:
+        QMessageBox::information(nullptr, "Information", "Out of Memory");
+        delete ThreadEnCryp;
+        ThreadEnCryp = nullptr;
+        break;
+    case 4:
+        QMessageBox::information(nullptr, "Information", "Out of Memory");
+        delete ThreadDeCryp;
+        ThreadDeCryp = nullptr;
+        break;
     }
     ui->progressBar->setValue(0);
     Thread->terminate();
@@ -197,8 +207,8 @@ void MainWindowCrypton::on_pushButton_3_clicked()
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile("COPYING.txt"));
     QMessageBox::information(nullptr, "Information",
-    "CRYPTOSECURITY version 1.0. File Encryption Software\n"
-    "Copyright (C) 2018  Maxim Shershavikov\n\n"
+    "CRYPTOSECURITY version 1.1. File Encryption Software\n"
+    "Copyright (C) 2019  Maxim Shershavikov\n\n"
     "This program is free software: you can redistribute it and/or modify\n"
     "it under the terms of the GNU General Public License as published by\n"
     "the Free Software Foundation, either version 3 of the License, or\n"

@@ -1,16 +1,16 @@
 /**********************************************************************************
 
-    CRYPTOSECURITY version 1.0. File Encryption Software
-    Copyright (C) 2018  Maxim Shershavikov
+    CRYPTOSECURITY version 1.1. File Encryption Software
+    Copyright (C) 2019  Maxim Shershavikov
 
-    This file is part of CryptoSecurity v1.0.
+    This file is part of CryptoSecurity v1.1.
 
-    CryptoSecurity v1.0 is free software: you can redistribute it and/or modify
+    CryptoSecurity v1.1 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CryptoSecurity v1.0 is distributed in the hope that it will be useful,
+    CryptoSecurity v1.1 is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -38,18 +38,18 @@ typedef int BOOL;
 class CRYPTOSECURITY
 {
 private:
-    WORD Res;
+    WORD       Res;
     const WORD Modul;
-    BYTE Result;
-    BOOL *FByte;
-    BOOL *SByte;
-    WORD *WordPolinom;
-    int j, i;
-    int BitRes, BitMod;
+    BYTE       Result;
+    BOOL       *FByte;
+    BOOL       *SByte;
+    WORD       *WordPolinom;
+    int        j, i;
+    int        BitRes, BitMod;
 protected:
     const BYTE ByteBoxCrypto[16][16];
     const BYTE ByteBoxDeCrypto[16][16];
-    BYTE PolinomByte(BYTE *FerstByte, BYTE *SecondByte);
+    BYTE       _PolinomByte(BYTE *FerstByte, BYTE *SecondByte);
 public:
     CRYPTOSECURITY();
     ~CRYPTOSECURITY();

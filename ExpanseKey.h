@@ -1,16 +1,16 @@
 /**********************************************************************************
 
-    CRYPTOSECURITY version 1.0. File Encryption Software
-    Copyright (C) 2018  Maxim Shershavikov
+    CRYPTOSECURITY version 1.1. File Encryption Software
+    Copyright (C) 2019  Maxim Shershavikov
 
-    This file is part of CryptoSecurity v1.0.
+    This file is part of CryptoSecurity v1.1.
 
-    CryptoSecurity v1.0 is free software: you can redistribute it and/or modify
+    CryptoSecurity v1.1 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CryptoSecurity v1.0 is distributed in the hope that it will be useful,
+    CryptoSecurity v1.1 is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -29,19 +29,19 @@
 
 #include "CryptoSecurity.h"
 
-class EXPANSEKEY : CRYPTOSECURITY
+class EXPANSEKEY : public CRYPTOSECURITY
 {
 private:
-    int x;
-    int y;
-    int block;
-    BYTE *Word;
+    int        x;
+    int        y;
+    int        block;
+    BYTE       *Word;
     const BYTE ConstExKey[44];
-    BYTE KeyExpanse(BYTE *key);
-    void ByteOffset(int i, int a, int b, int c, int d);
-    void ByteSwapping(int s);
+    BYTE       KeyExpanse(BYTE *key);
+    void       ByteOffset(int i, int a, int b, int c, int d);
+    void       ByteSwapping(int s, int i);
 public:
-    BYTE *ExKey;
+    BYTE       *ExKey;
     EXPANSEKEY(BYTE *key);
     ~EXPANSEKEY();
 };

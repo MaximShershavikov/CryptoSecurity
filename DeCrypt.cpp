@@ -1,16 +1,16 @@
 /**********************************************************************************
 
-    CRYPTOSECURITY version 1.0. File Encryption Software
-    Copyright (C) 2018  Maxim Shershavikov
+    CRYPTOSECURITY version 1.1. File Encryption Software
+    Copyright (C) 2019  Maxim Shershavikov
 
-    This file is part of CryptoSecurity v1.0.
+    This file is part of CryptoSecurity v1.1.
 
-    CryptoSecurity v1.0 is free software: you can redistribute it and/or modify
+    CryptoSecurity v1.1 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CryptoSecurity v1.0 is distributed in the hope that it will be useful,
+    CryptoSecurity v1.1 is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -27,8 +27,8 @@
 #include "DeCrypt.h"
 
 DECRYPT::DECRYPT() : ValueOwnDeCrypto(0), ValueTwoDeCrypto(0), WordDeCrypto(160),
-ConstMixDeCrypto{ 0x0e, 0x0b, 0x0d, 0x09, 0x09, 0x0e, 0x0b,
-0x0d, 0x0d, 0x09, 0x0e, 0x0b, 0x0b, 0x0d, 0x09, 0x0e }
+ConstMixDeCrypto{ 0x0e, 0x0b, 0x0d, 0x09, 0x09, 0x0e, 0x0b, 0x0d,
+                  0x0d, 0x09, 0x0e, 0x0b, 0x0b, 0x0d, 0x09, 0x0e }
 {
     ColumsDataDeCrypto = new BYTE[4];
 }
@@ -41,40 +41,28 @@ DECRYPT::~DECRYPT()
 
 void DECRYPT::AddExpanseKeyDeCrypto(BYTE *ExKey, BYTE *Data, int i)
 {
-    if (i < 16)
-    {
-        Data[i] ^= ExKey[WordDeCrypto + i];
-        AddExpanseKeyDeCrypto(ExKey, Data, ++i);
-    }
-    else
-    {
-        WordDeCrypto -= 16;
-        return;
-    }
+    Data[i] ^= ExKey[WordDeCrypto + i];
+    if (i < 15) AddExpanseKeyDeCrypto(ExKey, Data, ++i);
+    else { WordDeCrypto -= 16; return; }
 }
 
-void DECRYPT::ColumnMixingDeCrypto(BYTE *Data)
+void DECRYPT::ColumnMixingDeCrypto(BYTE *Data, int i)
 {
-    for (int i = 0; i < 16; i++)
+    if (ValueOwnDeCrypto == 0)
     {
-        if (ValueOwnDeCrypto == 0)
-        {
-            ColumsDataDeCrypto[0] = Data[0 + ValueTwoDeCrypto];
-            ColumsDataDeCrypto[1] = Data[1 + ValueTwoDeCrypto];
-            ColumsDataDeCrypto[2] = Data[2 + ValueTwoDeCrypto];
-            ColumsDataDeCrypto[3] = Data[3 + ValueTwoDeCrypto];
-        }
-        Data[i] = (PolinomByte(&ConstMixDeCrypto[ValueOwnDeCrypto * 4], &ColumsDataDeCrypto[0])) ^
-            (PolinomByte(&ConstMixDeCrypto[(ValueOwnDeCrypto * 4) + 1], &ColumsDataDeCrypto[1])) ^
-            (PolinomByte(&ConstMixDeCrypto[(ValueOwnDeCrypto * 4) + 2], &ColumsDataDeCrypto[2])) ^
-            (PolinomByte(&ConstMixDeCrypto[(ValueOwnDeCrypto * 4) + 3], &ColumsDataDeCrypto[3]));
-        ValueOwnDeCrypto++;
-        if (ValueOwnDeCrypto == 4)
-        {
-            ValueOwnDeCrypto = 0;
-            ValueTwoDeCrypto += 4;
-        }
+        ColumsDataDeCrypto[0] = Data[0 + ValueTwoDeCrypto];
+        ColumsDataDeCrypto[1] = Data[1 + ValueTwoDeCrypto];
+        ColumsDataDeCrypto[2] = Data[2 + ValueTwoDeCrypto];
+        ColumsDataDeCrypto[3] = Data[3 + ValueTwoDeCrypto];
     }
+    Data[i] = (_PolinomByte(&ConstMixDeCrypto[ValueOwnDeCrypto * 4], &ColumsDataDeCrypto[0])) ^
+        (_PolinomByte(&ConstMixDeCrypto[(ValueOwnDeCrypto * 4) + 1], &ColumsDataDeCrypto[1])) ^
+        (_PolinomByte(&ConstMixDeCrypto[(ValueOwnDeCrypto * 4) + 2], &ColumsDataDeCrypto[2])) ^
+        (_PolinomByte(&ConstMixDeCrypto[(ValueOwnDeCrypto * 4) + 3], &ColumsDataDeCrypto[3]));
+    ValueOwnDeCrypto++;
+    if (ValueOwnDeCrypto == 4) { ValueOwnDeCrypto = 0; ValueTwoDeCrypto += 4; }
+    if (i < 15) ColumnMixingDeCrypto(Data, ++i);
+    else return;
 }
 
 void DECRYPT::ByteOffsetDeCrypto(BYTE *Data)
@@ -97,25 +85,19 @@ void DECRYPT::ByteOffsetDeCrypto(BYTE *Data)
     Data[15] = static_cast<BYTE>(ValueOwnDeCrypto);
 }
 
-void DECRYPT::ByteSwappingDeCrypto(BYTE *Data)
+void DECRYPT::ByteSwappingDeCrypto(BYTE *Data, int i)
 {
-    for (int i = 0; i < 16; i++)
-    {
-        ValueOwnDeCrypto = Data[i] >> 4;
-        ValueTwoDeCrypto = Data[i] & 0x0F;
-        Data[i] = ByteBoxDeCrypto[ValueOwnDeCrypto][ValueTwoDeCrypto];
-    }
-    ValueOwnDeCrypto = 0;
-    ValueTwoDeCrypto = 0;
+    ValueOwnDeCrypto = Data[i] >> 4;
+    ValueTwoDeCrypto = Data[i] & 0x0F;
+    Data[i] = ByteBoxDeCrypto[ValueOwnDeCrypto][ValueTwoDeCrypto];
+    if (i < 15) ByteSwappingDeCrypto(Data, ++i);
+    else ValueOwnDeCrypto = 0; ValueTwoDeCrypto = 0; return;
 }
 
 void DECRYPT::EndByteXor(BYTE *ExKey, BYTE *Data, int i)
 {
-    if (i < 16)
-    {
-        Data[i] ^= ExKey[i];
-        EndByteXor(ExKey, Data, ++i);
-    }
+    Data[i] ^= ExKey[i];
+    if (i < 15) EndByteXor(ExKey, Data, ++i);
     else return;
 }
 
@@ -127,14 +109,14 @@ void DECRYPT::DeCryptRound(BYTE *ExKey, BYTE *Data)
         {
             AddExpanseKeyDeCrypto(ExKey, Data, 0);
             ByteOffsetDeCrypto(Data);
-            ByteSwappingDeCrypto(Data);
+            ByteSwappingDeCrypto(Data, 0);
         }
         else
         {
             AddExpanseKeyDeCrypto(ExKey, Data, 0);
-            ColumnMixingDeCrypto(Data);
+            ColumnMixingDeCrypto(Data, 0);
             ByteOffsetDeCrypto(Data);
-            ByteSwappingDeCrypto(Data);
+            ByteSwappingDeCrypto(Data, 0);
         }
     }
     EndByteXor(ExKey, Data, 0);

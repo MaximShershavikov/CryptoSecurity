@@ -1,16 +1,16 @@
 /**********************************************************************************
 
-    CRYPTOSECURITY version 1.0. File Encryption Software
-    Copyright (C) 2018  Maxim Shershavikov
+    CRYPTOSECURITY version 1.1. File Encryption Software
+    Copyright (C) 2019  Maxim Shershavikov
 
-    This file is part of CryptoSecurity v1.0.
+    This file is part of CryptoSecurity v1.1.
 
-    CryptoSecurity v1.0 is free software: you can redistribute it and/or modify
+    CryptoSecurity v1.1 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    CryptoSecurity v1.0 is distributed in the hope that it will be useful,
+    CryptoSecurity v1.1 is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -35,17 +35,17 @@ typedef unsigned long DWORD;
 class HASHMD5
 {
 private:
-    int sizebyte;
-    int sizebit;
-    char *Message;
+    int   sizebyte;
+    int   sizebit;
+    char  *Message;
     DWORD *DataHash;
     DWORD *InitialValue;
     DWORD *Data;
-    void StreamProcessing(char *StringKey);
-    void RaundOperation(DWORD *ValOne, DWORD *ValTwo, DWORD *ValFhree, DWORD *ValFour, DWORD *Data, DWORD Kons, int i, int n);
-    BYTE MdHashProcessing();
+    void  StreamProcessing(char *StringKey);
+    void  RaundOperation(DWORD *ValOne, DWORD *ValTwo, DWORD *ValFhree, DWORD *ValFour, DWORD *Data, DWORD Kons, int i, int n);
+    BYTE  MdHashProcessing();
 public:
-    BYTE *Md5Hash;
+    BYTE  *Md5Hash;
     HASHMD5(char *StringKey);
     ~HASHMD5();
 };
